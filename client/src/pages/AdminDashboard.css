@@ -1,0 +1,381 @@
+.admin-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.admin-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #1877f2;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.admin-header h1 {
+  color: #1c1e21;
+  font-size: 24px;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e4e6eb;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #606770;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  background-color: #f0f2f5;
+}
+
+.tab.active {
+  color: #1877f2;
+  border-bottom-color: #1877f2;
+}
+
+.admin-content h2 {
+  color: #1c1e21;
+  font-size: 20px;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.admin-form input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccd0d5;
+  border-radius: 6px;
+  outline: none;
+}
+
+.admin-form input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+.requirements-input {
+  display: flex;
+  gap: 8px;
+}
+
+.requirements-input input {
+  flex: 1;
+}
+
+.requirements-input button {
+  padding: 12px 20px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.requirements-input button:hover {
+  background-color: #166fe5;
+}
+
+.requirements-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.requirement-tag {
+  background: #e4e6eb;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.requirement-tag button {
+  background: none;
+  border: none;
+  color: #606770;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.requirement-tag button:hover {
+  color: #f02849;
+}
+
+.add-btn {
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #166fe5;
+}
+
+.services-list,
+.availabilities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointment-item {
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.appointment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appointment-info strong {
+  color: #1c1e21;
+  font-size: 16px;
+}
+
+.appointment-info span {
+  color: #606770;
+  font-size: 14px;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  color: #606770;
+  font-size: 14px;
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.service-item,
+.availability-item {
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.service-info h3 {
+  color: #1c1e21;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.service-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn,
+.delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #166fe5;
+}
+
+.save-btn {
+  background-color: #42b72a;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #36a420;
+}
+
+.cancel-btn {
+  background-color: #e4e6eb;
+  color: #1c1e21;
+}
+
+.cancel-btn:hover {
+  background-color: #ccd0d5;
+}
+
+.delete-btn {
+  background-color: #f02849;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d91e2f;
+}
+
+.edit-service-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-service-form input {
+  padding: 8px;
+  border: 1px solid #ccd0d5;
+  border-radius: 6px;
+}
+
+.availability-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.availability-info strong {
+  color: #1c1e21;
+  font-size: 16px;
+}
+
+.availability-info span {
+  color: #606770;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 16px 12px;
+  }
+
+  .admin-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .admin-header h1 {
+    font-size: 20px;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .admin-form input {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .requirements-input button {
+    padding: 14px 16px;
+  }
+
+  .service-item,
+  .availability-item,
+  .appointment-item {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .service-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .save-btn,
+  .cancel-btn,
+  .delete-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-container {
+    padding: 12px 8px;
+  }
+
+  .admin-card {
+    padding: 16px 12px;
+  }
+
+  .admin-tabs {
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .admin-content h2 {
+    font-size: 18px;
+  }
+}

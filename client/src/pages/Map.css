@@ -1,0 +1,204 @@
+.map-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.map-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #1877f2;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.map-card h1 {
+  color: #1c1e21;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.map-section {
+  margin-bottom: 32px;
+}
+
+.map-section h2,
+.contact-section h2,
+.office-hours h2 {
+  color: #1c1e21;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.map-placeholder {
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.map-image {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 12px;
+}
+
+.map-image svg {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.map-note {
+  color: #606770;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.contact-section {
+  margin-bottom: 32px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #f0f2f5;
+  border-radius: 8px;
+}
+
+.contact-icon {
+  font-size: 32px;
+}
+
+.contact-details {
+  flex: 1;
+}
+
+.contact-label {
+  color: #606770;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  color: #1877f2;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.contact-value a {
+  color: #1877f2;
+  text-decoration: none;
+}
+
+.contact-value a:hover {
+  text-decoration: underline;
+}
+
+.office-hours {
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.hours-info p {
+  color: #1c1e21;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.hours-info strong {
+  color: #1877f2;
+}
+
+@media (max-width: 768px) {
+  .map-container {
+    padding: 16px 12px;
+  }
+
+  .map-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .map-card h1 {
+    font-size: 20px;
+  }
+
+  .map-section h2,
+  .contact-section h2,
+  .office-hours h2 {
+    font-size: 18px;
+  }
+
+  .map-placeholder {
+    padding: 16px;
+  }
+
+  .contact-item {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .contact-icon {
+    font-size: 28px;
+  }
+
+  .contact-label {
+    font-size: 13px;
+  }
+
+  .contact-value {
+    font-size: 15px;
+  }
+
+  .office-hours {
+    padding: 16px;
+  }
+
+  .hours-info p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container {
+    padding: 12px 8px;
+  }
+
+  .map-card {
+    padding: 16px 12px;
+  }
+
+  .map-card h1 {
+    font-size: 18px;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    text-align: center;
+  }
+}

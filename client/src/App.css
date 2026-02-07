@@ -1,0 +1,38 @@
+.App {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding: 0;
+}
+
+.AppShell {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background-color: #fffde7;
+  overflow: hidden;
+}
+
+.AppViewport {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (min-width: 500px) {
+  .App {
+    padding: 24px 0;
+  }
+
+  .AppShell {
+    min-height: calc(100vh - 48px);
+    border-radius: 28px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  }
+
+  .AppViewport {
+    min-height: calc(100vh - 48px);
+  }
+}

@@ -1,0 +1,232 @@
+.homepage-container {
+  min-height: 100vh;
+}
+
+.homepage-header {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.header-content p {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-btn,
+.logout-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.admin-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.logout-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #d32f2f;
+}
+
+.logout-btn:hover {
+  background-color: white;
+}
+
+.homepage-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.welcome-section h2 {
+  color: #1c1e21;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.welcome-section p {
+  color: #606770;
+  font-size: 16px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.menu-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.menu-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.menu-icon {
+  margin-bottom: 12px;
+  color: #d32f2f;
+}
+
+.menu-svg-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.menu-title {
+  color: #1c1e21;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .homepage-header {
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-content h1 {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+
+  .header-content p {
+    font-size: 14px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .admin-btn,
+  .logout-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+
+  .homepage-content {
+    padding: 16px 12px;
+  }
+
+  .welcome-section {
+    margin-bottom: 24px;
+  }
+
+  .welcome-section h2 {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .welcome-section p {
+    font-size: 14px;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .menu-card {
+    padding: 20px 16px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .menu-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  .menu-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-header {
+    padding: 12px;
+  }
+
+  .header-content h1 {
+    font-size: 16px;
+  }
+
+  .header-content p {
+    font-size: 12px;
+  }
+
+  .admin-btn,
+  .logout-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+
+  .homepage-content {
+    padding: 12px 8px;
+  }
+
+  .welcome-section h2 {
+    font-size: 20px;
+  }
+
+  .menu-grid {
+    gap: 10px;
+  }
+
+  .menu-card {
+    padding: 16px 12px;
+    min-height: 100px;
+  }
+
+  .menu-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+
+  .menu-title {
+    font-size: 13px;
+  }
+}

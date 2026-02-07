@@ -1,0 +1,32 @@
+{
+  "name": "registrar-booking-system",
+  "version": "1.0.0",
+  "description": "Booking and Queuing System for Municipal Registrar of Bongao",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "py -m uvicorn server.main:app --reload --port 5000",
+    "client": "cd client && npm start",
+    "install-client": "cd client && npm install",
+    "install-server": "npm install",
+    "install-backend": "py -m pip install -r server/requirements.txt",
+    "install-all": "npm install && cd client && npm install && cd .. && py -m pip install -r server/requirements.txt",
+    "create-admin": "node server/scripts/createAdmin.js"
+  },
+  "keywords": ["booking", "queuing", "registrar"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "neo4j-driver": "^5.14.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.2"
+  }
+}

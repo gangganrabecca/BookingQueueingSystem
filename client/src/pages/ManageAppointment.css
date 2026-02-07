@@ -1,0 +1,261 @@
+.manage-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.manage-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #1877f2;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.manage-card h1 {
+  color: #1c1e21;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.no-appointments {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.no-appointments p {
+  color: #606770;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.book-btn {
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.book-btn:hover {
+  background-color: #166fe5;
+}
+
+.appointment-item {
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.appointment-details h3 {
+  color: #1c1e21;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #e4e6eb;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #606770;
+  min-width: 100px;
+}
+
+.detail-value {
+  color: #1c1e21;
+  flex: 1;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.edit-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #166fe5;
+}
+
+.cancel-btn {
+  background-color: #f02849;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #d91e2f;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edit-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-form label {
+  color: #606770;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccd0d5;
+  border-radius: 6px;
+  outline: none;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+}
+
+.save-btn,
+.cancel-edit-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #166fe5;
+}
+
+.cancel-edit-btn {
+  background-color: #e4e6eb;
+  color: #1c1e21;
+}
+
+.cancel-edit-btn:hover {
+  background-color: #ccd0d5;
+}
+
+.error-message {
+  color: #f02849;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+  background-color: #fff4e6;
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .manage-container {
+    padding: 16px 12px;
+  }
+
+  .manage-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .manage-card h1 {
+    font-size: 20px;
+  }
+
+  .appointment-item {
+    padding: 16px;
+  }
+
+  .appointment-details h3 {
+    font-size: 18px;
+  }
+
+  .detail-label {
+    min-width: 80px;
+    font-size: 13px;
+  }
+
+  .detail-value {
+    font-size: 14px;
+  }
+
+  .appointment-actions {
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+
+  .edit-form input,
+  .edit-form select {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manage-container {
+    padding: 12px 8px;
+  }
+
+  .manage-card {
+    padding: 16px 12px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+}
