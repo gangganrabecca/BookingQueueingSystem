@@ -365,25 +365,29 @@ async def health() -> Dict[str, Any]:
 
 @app.post("/api/auth/signup")
 async def signup(payload: SignupRequest) -> Dict[str, Any]:
-    driver = _get_driver()
-    with driver.session() as session:
-        existing = session.run("MATCH (u:User {email: $email}) RETURN u", email=str(payload.email))
-        if existing.peek() is not None:
-            raise HTTPException(status_code=400, detail="User already exists")
+    try:
+        driver = _get_driver()
+        with driver.session() as session:
+            existing = session.run("MATCH (u:User {email: $email}) RETURN u", email=str(payload.email))
+            if existing.peek() is not None:
+                raise HTTPException(status_code=400, detail="User already exists")
 
-        hashed = _hash_password(payload.password)
-        result = session.run(
-            "CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, role: $role, createdAt: datetime()}) RETURN u",
-            name=payload.name,
-            email=str(payload.email),
-            password=hashed,
-            role=payload.role,
-        )
-        user_node = result.single()["u"]
-        user = _node_to_dict(user_node)
-        user.pop("password", None)
-        token = _create_token(user_id=user["id"], email=user["email"], role=user.get("role", "client"))
-        return {"token": token, "user": user}
+            hashed = _hash_password(payload.password)
+            result = session.run(
+                "CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, role: $role, createdAt: datetime()}) RETURN u",
+                name=payload.name,
+                email=str(payload.email),
+                password=hashed,
+                role=payload.role,
+            )
+            user_node = result.single()["u"]
+            user = _node_to_dict(user_node)
+            user.pop("password", None)
+            token = _create_token(user_id=user["id"], email=user["email"], role=user.get("role", "client"))
+            return {"token": token, "user": user}
+    except Exception as e:
+        print(f"Signup error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
 
 @app.post("/api/auth/login")
