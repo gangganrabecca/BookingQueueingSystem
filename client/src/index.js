@@ -1,4 +1,5 @@
-// import React from 'react';
+// 
+import React from 'react';
 import { createRoot } from 'react-dom/client'; // updated import for React 18+
 import './index.css';
 import App from './App';
