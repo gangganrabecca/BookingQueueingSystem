@@ -243,11 +243,7 @@ async def unhandled_exception_handler(_, __):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://booking-frontend-0bq1.onrender.com",
-        "https://booking-backend-r9dc.onrender.com"
-    ],
+    allow_origins=["*"],  # Temporary fix - allows all origins
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -359,10 +355,13 @@ async def shutdown_event() -> None:
         _driver = None
 
 
-@app.get("/api/health")
+@app.get("/")
+async def root():
+    return {"message": "Booking System API is running", "status": "ok"}
+
+@app.get("/health")
 async def health() -> Dict[str, Any]:
     return {"status": "OK", "message": "Server is running"}
-
 
 @app.post("/api/auth/signup")
 async def signup(payload: SignupRequest) -> Dict[str, Any]:
