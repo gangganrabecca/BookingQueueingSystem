@@ -243,10 +243,14 @@ async def unhandled_exception_handler(_, __):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://booking-frontend-0bq1.onrender.com"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://booking-frontend-0bq1.onrender.com",
+        "https://booking-backend-r9dc.onrender.com"
+    ],
     allow_credentials=True,
-    allow_methods=["*"] ,
-    allow_headers=["*"] ,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 

@@ -1,21 +1,25 @@
+// 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
 /**
  * Backend API URL
- * Must be set in frontend/.env as:
+ * Must be set in client/.env as:
  * REACT_APP_API_URL=https://booking-backend-r9dc.onrender.com
  */
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-if (!API_URL) {
-  console.error('❌ REACT_APP_API_URL is not defined');
+// ⚠️ Show warning in development if using fallback
+if (!process.env.REACT_APP_API_URL && process.env.NODE_ENV === 'development') {
+  console.warn('⚠️ REACT_APP_API_URL not set, using fallback http://localhost:5000 for local development');
 }
 
-// Create axios instance instead of using global defaults
+// ✅ Create axios instance
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: false,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 const AuthContext = createContext(null);
@@ -31,20 +35,21 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
 
-  // Attach token to axios headers
+  // 🔑 Attach token to axios headers
   useEffect(() => {
     if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
       fetchUser();
     } else {
-      delete api.defaults.headers.common['Authorization'];
+      delete api.defaults.headers.common.Authorization;
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
+  // 👤 Get logged-in user
   const fetchUser = async () => {
     try {
       const res = await api.get('/api/auth/me');
@@ -59,15 +64,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 🔐 LOGIN
   const login = async (email, password) => {
     try {
       const res = await api.post('/api/auth/login', { email, password });
+
       const { token: newToken, user: userData } = res.data;
 
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      api.defaults.headers.common.Authorization = `Bearer ${newToken}`;
 
       return res.data;
     } catch (err) {
@@ -76,6 +83,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 📝 SIGNUP
   const signup = async (name, email, password) => {
     try {
       const res = await api.post('/api/auth/signup', {
@@ -89,7 +97,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', newToken);
       setToken(newToken);
       setUser(userData);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      api.defaults.headers.common.Authorization = `Bearer ${newToken}`;
 
       return res.data;
     } catch (err) {
@@ -98,11 +106,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 🚪 LOGOUT
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    delete api.defaults.headers.common['Authorization'];
+    delete api.defaults.headers.common.Authorization;
   };
 
   return (

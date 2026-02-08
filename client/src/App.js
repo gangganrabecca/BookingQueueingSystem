@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -13,7 +13,12 @@ import Map from './pages/Map';
 import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
+// Centralized API URL
+export const API_URL = process.env.REACT_APP_API_URL;
+
 function App() {
+  console.log('API URL:', API_URL); // optional: debug to check if env variable is working
+
   return (
     <div className="App">
       <div className="AppShell">
