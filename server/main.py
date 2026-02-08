@@ -362,7 +362,7 @@ async def root():
 
 @app.get("/health")
 async def health() -> Dict[str, Any]:
-    return {"status": "OK", "message": "Server is running"}
+    return {"status": "OK", "message": "Server is running", "version": "1.1.0"}
 
 @app.post("/api/auth/signup")
 async def signup(payload: SignupRequest) -> Dict[str, Any]:
