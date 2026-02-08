@@ -144,7 +144,8 @@ def _node_to_dict(node: Any) -> Dict[str, Any]:
 
 
 def _hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Truncate password to 72 bytes before hashing (bcrypt limit)
+    return pwd_context.hash(password[:72])
 
 
 def _verify_password(password: str, hashed: str) -> bool:
