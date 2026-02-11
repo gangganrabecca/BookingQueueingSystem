@@ -144,8 +144,7 @@ def _node_to_dict(node: Any) -> Dict[str, Any]:
 
 
 def _hash_password(password: str) -> str:
-    # Truncate password to 72 bytes before hashing (bcrypt limit)
-    return pwd_context.hash(password[:72])
+    return pwd_context.hash(password)
 
 
 def _verify_password(password: str, hashed: str) -> bool:
@@ -165,7 +164,11 @@ class SignupRequest(BaseModel):
     name: str = Field(..., min_length=1)
     email: EmailStr
     password: str = Field(..., min_length=6)
-    role: str = "client"
+
+
+class AdminLoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class LoginRequest(BaseModel):
@@ -190,7 +193,7 @@ class AppointmentCreate(BaseModel):
     email: EmailStr
     service: str
     date: str
-    time: Optional[str] = None
+    time: str
 
 
 class AppointmentUpdate(BaseModel):
@@ -198,7 +201,11 @@ class AppointmentUpdate(BaseModel):
     email: EmailStr
     service: str
     date: str
-    time: Optional[str] = None
+    time: str
+
+
+class AppointmentDecision(BaseModel):
+    estimatedTime: Optional[str] = None
 
 
 def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> Dict[str, Any]:
@@ -242,11 +249,15 @@ async def validation_exception_handler(_, exc: RequestValidationError):
 async def unhandled_exception_handler(_, __):
     return JSONResponse(status_code=500, content={"message": "Server error"})
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Temporary fix - allows all origins
+    allow_origins=[
+        "http://localhost:3000",
+        "https://booking-frontend-0bq1.onrender.com",
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -356,39 +367,31 @@ async def shutdown_event() -> None:
         _driver = None
 
 
-@app.get("/")
-async def root():
-    return {"message": "Booking System API is running", "status": "ok"}
-
-@app.get("/health")
+@app.get("/api/health")
 async def health() -> Dict[str, Any]:
-    return {"status": "OK", "message": "Server is running", "version": "1.1.0"}
+    return {"status": "OK", "message": "Server is running"}
+
 
 @app.post("/api/auth/signup")
 async def signup(payload: SignupRequest) -> Dict[str, Any]:
-    try:
-        driver = _get_driver()
-        with driver.session() as session:
-            existing = session.run("MATCH (u:User {email: $email}) RETURN u", email=str(payload.email))
-            if existing.peek() is not None:
-                raise HTTPException(status_code=400, detail="User already exists")
+    driver = _get_driver()
+    with driver.session() as session:
+        existing = session.run("MATCH (u:User {email: $email}) RETURN u", email=str(payload.email))
+        if existing.peek() is not None:
+            raise HTTPException(status_code=400, detail="User already exists")
 
-            hashed = _hash_password(payload.password)
-            result = session.run(
-                "CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, role: $role, createdAt: datetime()}) RETURN u",
-                name=payload.name,
-                email=str(payload.email),
-                password=hashed,
-                role=payload.role,
-            )
-            user_node = result.single()["u"]
-            user = _node_to_dict(user_node)
-            user.pop("password", None)
-            token = _create_token(user_id=user["id"], email=user["email"], role=user.get("role", "client"))
-            return {"token": token, "user": user}
-    except Exception as e:
-        print(f"Signup error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+        hashed = _hash_password(payload.password)
+        result = session.run(
+            "CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, role: 'client', createdAt: datetime()}) RETURN u",
+            name=payload.name,
+            email=str(payload.email),
+            password=hashed,
+        )
+        user_node = result.single()["u"]
+        user = _node_to_dict(user_node)
+        user.pop("password", None)
+        token = _create_token(user_id=user["id"], email=user["email"], role=user.get("role", "client"))
+        return {"token": token, "user": user}
 
 
 @app.post("/api/auth/login")
@@ -408,6 +411,29 @@ async def login(payload: LoginRequest) -> Dict[str, Any]:
         user = _node_props_to_dict(user_props)
         user.pop("password", None)
         token = _create_token(user_id=user["id"], email=user["email"], role=user.get("role", "client"))
+        return {"token": token, "user": user}
+
+
+@app.post("/api/admin/login")
+async def admin_login(payload: AdminLoginRequest) -> Dict[str, Any]:
+    driver = _get_driver()
+    with driver.session() as session:
+        result = session.run("MATCH (u:User {email: $email}) RETURN u", email=str(payload.email))
+        record = result.single()
+        if record is None:
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+
+        user_node = record["u"]
+        user_props = _node_to_dict(user_node)
+        if not _verify_password(payload.password, user_props.get("password", "")):
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+
+        user = _node_props_to_dict(user_props)
+        if user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Access denied. Admin only.")
+
+        user.pop("password", None)
+        token = _create_token(user_id=user["id"], email=user["email"], role="admin")
         return {"token": token, "user": user}
 
 
@@ -448,9 +474,7 @@ async def get_service(service_id: str) -> Dict[str, Any]:
 async def get_availability() -> Dict[str, Any]:
     driver = _get_driver()
     with driver.session() as session:
-        result = session.run(
-            "MATCH (a:Availability) RETURN a ORDER BY a.date, a.time"
-        )
+        result = session.run("MATCH (a:Availability) RETURN a ORDER BY a.date, a.time")
         availabilities = [_node_to_dict(r["a"]) for r in result]
         return {"availabilities": availabilities}
 
@@ -461,7 +485,7 @@ async def create_appointment(payload: AppointmentCreate, user: Dict[str, Any] = 
     with driver.session() as session:
         result = session.run(
             "MATCH (u:User {id: $userId}) "
-            "CREATE (a:Appointment {id: randomUUID(), name: $name, email: $email, service: $service, date: $date, time: $time, status: 'confirmed', createdAt: datetime()}) "
+            "CREATE (a:Appointment {id: randomUUID(), name: $name, email: $email, service: $service, date: $date, time: $time, status: 'pending', createdAt: datetime()}) "
             "CREATE (u)-[:HAS_APPOINTMENT]->(a) "
             "RETURN a",
             userId=user.get("userId"),
@@ -472,10 +496,6 @@ async def create_appointment(payload: AppointmentCreate, user: Dict[str, Any] = 
             time=payload.time,
         )
         appointment = _node_to_dict(result.single()["a"])
-        _renumber_queue_for_date(session, payload.date)
-        # Refresh to get the assigned queue number
-        refreshed = session.run("MATCH (a:Appointment {id: $id}) RETURN a", id=appointment["id"]).single()
-        appointment = _node_to_dict(refreshed["a"])
         return {"appointment": appointment}
 
 
@@ -530,27 +550,12 @@ async def update_appointment(appointment_id: str, payload: AppointmentUpdate, us
         return {"appointment": appointment}
 
 
-def _renumber_queue_for_date(session, date: str) -> None:
+def _renumber_approved_queue_for_date(session, appt_date: str) -> None:
     result = session.run(
-        "MATCH (a:Appointment) WHERE a.date = $date AND a.status = 'confirmed' "
-        "RETURN a ORDER BY a.createdAt ASC",
-        date=date,
-    )
-    appointments = [dict(r["a"]).get("id") for r in result]
-    for idx, appointment_id in enumerate(appointments, start=1):
-        if not appointment_id:
-            continue
-        session.run(
-            "MATCH (a:Appointment {id: $id}) SET a.queueNumber = $n",
-            id=appointment_id,
-            n=idx,
-        )
-
-
-def _renumber_confirmed_queue(session) -> None:
-    result = session.run(
-        "MATCH (a:Appointment) WHERE a.status = 'confirmed' "
-        "RETURN a ORDER BY a.date ASC, a.createdAt ASC"
+        "MATCH (a:Appointment) "
+        "WHERE a.status = 'approved' AND a.date = $date "
+        "RETURN a ORDER BY a.time ASC, a.createdAt ASC",
+        date=appt_date,
     )
     appointments = [dict(r["a"]).get("id") for r in result]
     for idx, appointment_id in enumerate(appointments, start=1):
@@ -567,28 +572,26 @@ def _renumber_confirmed_queue(session) -> None:
 async def cancel_appointment(appointment_id: str, user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
     driver = _get_driver()
     with driver.session() as session:
-        # Get the appointment's date before deleting
-        appt_result = session.run(
+        date_record = session.run(
             "MATCH (u:User {id: $userId})-[:HAS_APPOINTMENT]->(a:Appointment {id: $id}) RETURN a.date as date",
             userId=user.get("userId"),
             id=appointment_id,
         ).single()
-        if appt_result is None:
+        if date_record is None:
             raise HTTPException(status_code=404, detail="Appointment not found")
-        appointment_date = appt_result["date"]
+        appt_date = date_record["date"]
 
-        # Delete the appointment
         result = session.run(
-            "MATCH (u:User {id: $userId})-[:HAS_APPOINTMENT]->(a:Appointment {id: $id}) DETACH DELETE a RETURN $id as id",
+            "MATCH (u:User {id: $userId})-[:HAS_APPOINTMENT]->(a:Appointment {id: $id}) "
+            "SET a.status = 'cancelled', a.cancelledAt = datetime() "
+            "RETURN a",
             userId=user.get("userId"),
             id=appointment_id,
         )
         record = result.single()
         if record is None:
             raise HTTPException(status_code=404, detail="Appointment not found")
-        
-        # Renumber queue for the affected date
-        _renumber_queue_for_date(session, appointment_date)
+        _renumber_approved_queue_for_date(session, appt_date)
         return {"message": "Appointment cancelled successfully"}
 
 
@@ -598,15 +601,14 @@ async def queue_current(user: Dict[str, Any] = Depends(get_current_user)) -> Dic
     with driver.session() as session:
         result = session.run(
             "MATCH (u:User {id: $userId})-[:HAS_APPOINTMENT]->(a:Appointment) "
-            "WHERE a.status = 'confirmed' "
+            "WHERE a.status IN ['pending','approved'] "
             "RETURN a ORDER BY a.createdAt DESC LIMIT 1",
             userId=user.get("userId"),
-        ).single()
-
-        if result is None:
+        )
+        record = result.single()
+        if record is None:
             return {"queueNumber": None, "message": "No active appointments"}
-
-        appointment = _node_to_dict(result["a"])
+        appointment = _node_to_dict(record["a"])
         return {"queueNumber": appointment.get("queueNumber"), "appointment": appointment}
 
 
@@ -615,7 +617,7 @@ async def queue_all(_: Dict[str, Any] = Depends(require_admin)) -> Dict[str, Any
     driver = _get_driver()
     with driver.session() as session:
         result = session.run(
-            "MATCH (a:Appointment) WHERE a.status = 'confirmed' RETURN a ORDER BY a.queueNumber ASC"
+            "MATCH (a:Appointment) WHERE a.status = 'approved' RETURN a ORDER BY a.date ASC, a.queueNumber ASC"
         )
         appointments = [_node_to_dict(r["a"]) for r in result]
         return {"appointments": appointments}
@@ -626,10 +628,58 @@ async def admin_get_appointments(_: Dict[str, Any] = Depends(require_admin)) -> 
     driver = _get_driver()
     with driver.session() as session:
         result = session.run(
-            "MATCH (a:Appointment) RETURN a ORDER BY a.date ASC, a.createdAt ASC"
+            "MATCH (a:Appointment) RETURN a ORDER BY a.date ASC, a.time ASC, a.createdAt ASC"
         )
         appointments = [_node_to_dict(r["a"]) for r in result]
         return {"appointments": appointments}
+
+
+@app.post("/api/admin/appointments/{appointment_id}/approve")
+async def admin_approve_appointment(
+    appointment_id: str,
+    payload: AppointmentDecision,
+    _: Dict[str, Any] = Depends(require_admin),
+) -> Dict[str, Any]:
+    driver = _get_driver()
+    with driver.session() as session:
+        record = session.run(
+            "MATCH (a:Appointment {id: $id}) "
+            "SET a.status = 'approved', a.approvedAt = datetime(), a.estimatedTime = $estimatedTime "
+            "RETURN a",
+            id=appointment_id,
+            estimatedTime=payload.estimatedTime,
+        ).single()
+        if record is None:
+            raise HTTPException(status_code=404, detail="Appointment not found")
+
+        appt = _node_to_dict(record["a"])
+        appt_date = appt.get("date")
+        if appt_date:
+            _renumber_approved_queue_for_date(session, appt_date)
+
+        refreshed = session.run("MATCH (a:Appointment {id: $id}) RETURN a", id=appointment_id).single()
+        appointment = _node_to_dict((refreshed or record)["a"])
+        return {"appointment": appointment}
+
+
+@app.post("/api/admin/appointments/{appointment_id}/decline")
+async def admin_decline_appointment(
+    appointment_id: str,
+    _: Dict[str, Any] = Depends(require_admin),
+) -> Dict[str, Any]:
+    driver = _get_driver()
+    with driver.session() as session:
+        record = session.run(
+            "MATCH (a:Appointment {id: $id}) "
+            "SET a.status = 'declined', a.declinedAt = datetime() "
+            "REMOVE a.queueNumber "
+            "RETURN a",
+            id=appointment_id,
+        ).single()
+        if record is None:
+            raise HTTPException(status_code=404, detail="Appointment not found")
+        appointment = _node_to_dict(record["a"])
+        return {"appointment": appointment}
 
 
 @app.get("/api/admin/services")
